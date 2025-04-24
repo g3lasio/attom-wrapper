@@ -12,14 +12,13 @@ class PropertyService {
   /**
    * Fetch property details by address
    * @param {Object} addressInfo - Property address information
-   * @param {string} addressInfo.address1 - Street address
-   * @param {string} addressInfo.address2 - City, State, ZIP
+   * @param {string} addressInfo.address - Street address
    * @returns {Promise<Object>} - Normalized property details
    */
-  async getPropertyDetails({ address1, address2 }) {
+  async getPropertyDetails({ address }) {
     try {
       // Step 1: Get the attomId from the building permits endpoint
-      const attomId = await this.getAttomIdFromAddress({ address1, address2 });
+      const attomId = await this.getAttomIdFromAddress({ address });
       
       // Step 2: Get detailed property information using the attomId
       const propertyData = await this.getPropertyDetailsByAttomId(attomId);
@@ -37,12 +36,15 @@ class PropertyService {
   /**
    * Get the ATTOM ID for a property by address
    * @param {Object} addressInfo - Property address information
-   * @param {string} addressInfo.address1 - Street address
-   * @param {string} addressInfo.address2 - City, State, ZIP
+   * @param {string} addressInfo.address - Street address
    * @returns {Promise<string>} - The ATTOM ID
    */
-  async getAttomIdFromAddress({ address1, address2 }) {
+  async getAttomIdFromAddress({ address }) {
     try {
+      // 2901 Indiana Street, Dallas, Texas, EE. UU.
+      //split the address into components first commas indicates the address1
+      const address1= address.split(',')[0].trim();
+      const address2= address.split(',')[1].trim();
       const encodedAddress1 = (address1);
       const encodedAddress2 = (address2);
       

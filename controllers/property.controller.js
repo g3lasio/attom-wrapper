@@ -14,10 +14,10 @@ const propertyService = new PropertyService();
  */
 async function getPropertyDetails(req, res, next) {
   try {
-    const { address1, address2 } = req.query;
+    const { address } = req.query;
     
     // Check cache first
-    const cacheKey = `property:${address1}:${address2}`;
+    const cacheKey = `property:${address}`;
     const cachedData = cacheService.get(cacheKey);
     
     if (cachedData) {
@@ -25,7 +25,7 @@ async function getPropertyDetails(req, res, next) {
     }
     
     // If not in cache, fetch from service
-    const propertyDetails = await propertyService.getPropertyDetails({ address1, address2 });
+    const propertyDetails = await propertyService.getPropertyDetails({ address });
     
     // Store in cache (1 hour TTL)
     cacheService.set(cacheKey, propertyDetails, 3600);
